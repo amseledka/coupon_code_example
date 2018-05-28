@@ -1,0 +1,20 @@
+h2 Shopping data
+- @shopping_data.each do |key, value|
+  p = "#{key}: #{value}"
+
+p
+  | payment status:
+  =< @order.payment_status
+
+h2 Cart
+- @cart[:items].each do |item|
+  - if item[:discount_price].nil?
+    p = "#{item[:code]} #{item[:name]} #{item[:color]} - #{item[:regular_price]}#{item[:currency]}"
+  - else
+    p = "#{item[:code]} #{item[:name]} #{item[:color]} - #{item[:discount_price]}#{item[:currency]}"
+
+- if !@shopping_data[:delivery_fee].nil?
+  p = "Delivery fee: #{@shopping_data[:delivery_fee]} #{@shopping_data[:currency]}"
+  p = "Total: #{@cart[:total] + @shopping_data[:delivery_fee]} #{@shopping_data[:currency]}"
+- else
+  p = "Total: #{@cart[:total]} #{@shopping_data[:currency]}"

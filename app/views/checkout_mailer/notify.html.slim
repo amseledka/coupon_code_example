@@ -1,0 +1,143 @@
+div[style="position: relative; background-size: cover; background-image: url('https://image.ibb.co/kkbKSm/Layer_1.jpg'); font-family: 'Lato', Helvetica, Arial, sans-serif, sans-serif; color: #252525;"]
+  img[src="https://image.ibb.co/ewmm7m/GUDbags_logo_2.jpg" style="position: relative; width: 25%; margin-left:37.5%; margin-top: 9%"]
+  div[style="background-color: rgba(255, 255, 255, 0.75); padding: 10px; padding-top: 25px; position: relative; width: 80%; margin-top: 6%; margin-left: auto; margin-right: auto;"]
+    p[style="margin-top: 30px; margin-bottom: 30px; font-family: 'Lato', Helvetica, Arial, sans-serif; color: #252525; text-align: center; font-size: 18;"]
+      b #{I18n.t('checkout_mailer.notify.welcome')} #{@shopping_data[:first_name]},
+    p[style="margin: 0; font-family: 'Lato', Helvetica, Arial, sans-serif; color: #252525; text-align: center; font-size: 18;"]
+      =I18n.t('checkout_mailer.notify.thank1')
+      b GUD
+      = I18n.t('checkout_mailer.notify.thank2')
+    p[style="margin: 0; font-family: 'Lato', Helvetica, Arial, sans-serif; color: #252525; text-align: center; font-size: 18;"]
+      = I18n.t('checkout_mailer.notify.received')
+    p[style="margin-top: 0; font-family: 'Lato', Helvetica, Arial, sans-serif; color: #252525; text-align: center; font-size: 18;"]
+      = I18n.t('checkout_mailer.notify.qwestions')
+      b
+        a[href="#" style="color: #000;"] = I18n.t('checkout_mailer.notify.contact_email')
+      | .
+    p[style="font-family: 'Lato', Helvetica, Arial, sans-serif; color: #252525; text-align: center; font-size: 24;"]
+      = I18n.t('checkout_mailer.notify.ordered')
+
+    table[style="font-family: 'Lato', Helvetica, Arial, sans-serif; margin: 15px auto; padding: 10px; width: 80%; text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000;"]
+      tr
+        th[colspan="3"]
+          h2= I18n.t('checkout_mailer.notify.cart')
+      tr
+        th[style="width: 33%;"] = I18n.t('checkout_mailer.notify.product')
+        th[style="width: 33%;"] = I18n.t('checkout_mailer.notify.code')
+        th[style="width: 33%;"] = I18n.t('checkout_mailer.notify.price')
+
+      - @cart[:items].each do |item|
+        tr
+          td[style="width: 33%;"]
+            => item[:name]
+            = item[:color]
+
+          td[style="width: 33%;"] = item[:code]
+
+          - if item[:discount_price].present?
+            td[style="width: 33%;"] #{item[:discount_price]} #{item[:currency]}
+          - else
+            td[style="width: 33%;"]
+              = item[:regular_price]
+              =< item[:currency]
+
+      - if @shopping_data[:coupon].present?
+        tr
+          td[style="width: 33%; padding-top: 10px;"] = I18n.t('front_end.checkout.table.promo_code')
+          td
+          td[style="width: 33%; padding-top: 10px;"] #{@shopping_data[:coupon]}
+
+      - if @shopping_data[:delivery_fee].present?
+        tr
+          td[style="width: 33%; padding-top: 10px;"] = I18n.t('checkout_mailer.notify.order_delivery')
+          td
+          td[style="width: 33%; padding-top: 10px;"] #{@shopping_data[:delivery_fee]} #{@shopping_data[:currency]}
+
+      tr
+        td
+        td[style="width: 33%; font-size: 1.17em; font-weight: bold; padding: 10px;"] = I18n.t('checkout_mailer.notify.total')
+        td[style="width: 33%; font-size: 1.17em; font-weight: bold; padding: 10px;"]
+          - if @shopping_data[:delivery_fee].present?
+            = @cart[:total] + @shopping_data[:delivery_fee]
+          - else
+            = @cart[:total]
+          =< @shopping_data[:currency]
+
+    table[style="font-family: 'Lato', Helvetica, Arial, sans-serif; margin: 15px auto; padding: 10px; width: 80%; text-align: left;"]
+      tr
+        td[colspan="3"]
+          span[style="font-weight: bold;"]
+            = I18n.t('checkout_mailer.notify.delivery_method')
+            | :
+          - if @shopping_data[:shipment] == 'worldwide'
+            =< I18n.t('checkout_mailer.notify.international')
+          - else
+            - if @shopping_data[:shipment_method] == 'nova-poshta'
+              =< I18n.t('checkout_mailer.notify.nova_poshta')
+            - else
+              =< I18n.t('checkout_mailer.notify.courier')
+      tr
+        td[colspan="3"]
+          span[style="font-weight: bold;"]
+            = I18n.t('checkout_mailer.notify.paymet_method')
+            | :
+          - case @shopping_data[:payment_method]
+          - when 'cod'
+            =< I18n.t('checkout_mailer.notify.cod')
+          - when 'cash'
+            =< I18n.t('checkout_mailer.notify.cash')
+          - when 'paypal'
+            =< I18n.t('checkout_mailer.notify.paypal')
+          - when 'liqpay'
+            =< I18n.t('checkout_mailer.notify.liqpay')
+          - when 'two_checkout'
+            =< I18n.t('checkout_mailer.notify.two_checkout')
+        tr
+          td[colspan="3"]
+            span[style="font-weight: bold;"] = I18n.t('checkout_mailer.notify.delivery_address')
+            br
+            => @shopping_data[:first_name]
+            = @shopping_data[:last_name]
+            br
+            - if @shopping_data[:shipment] == 'worldwide'
+              = @shopping_data[:address]
+              =< @shopping_data[:apartments] if @shopping_data[:apartments].present?
+              br
+              = @shopping_data[:city]
+              br
+              = @shopping_data[:county]
+              br
+              = @shopping_data[:zip]
+
+            - elsif @shopping_data[:shipment] == 'ukraine' && @shopping_data[:shipment_method] == 'nova-poshta'
+              = @shopping_data[:city]
+              br
+              = I18n.t('checkout_mailer.notify.department')
+              =< @shopping_data[:department]
+              br
+              = I18n.t('checkout_mailer.notify.ukraine')
+
+            - else
+              => @shopping_data[:street]
+              = @shopping_data[:home]
+              | /
+              = @shopping_data[:apartments]
+              br
+              - if @shopping_data[:company].present?
+                =< @shopping_data[:company]
+                br
+              = I18n.t('checkout_mailer.notify.kiev')
+              br
+              = I18n.t('checkout_mailer.notify.ukraine')
+
+            br
+            span[style="font-weight: bold;"]
+              = I18n.t('checkout_mailer.notify.phone')
+              | :
+            =< @shopping_data[:phone]
+
+
+
+  span[style="position: relative; width: 100%; padding-top: 40px; margin-bottom: 40px;"]
+    p[style="font-family: 'Lato', Helvetica, Arial, sans-serif; color: #fae854; text-align: center; font-size: 18; height: 50px; margin-top: 25px; "]
+      a[href="http://gud.ua/" style="color: #fae854"] #{I18n.t('checkout_mailer.notify.link')}

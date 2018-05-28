@@ -1,0 +1,51 @@
+div id="slide-cart" class="side-nav"
+  div class="list"
+    - if !@cart.nil? && @cart[:items].length > 0
+      - @cart[:items].each do |item|
+        div class="item"
+          - if !item[:color].nil?
+            div class="name" = item[:name] + ' ' + item[:color]
+          - else
+            div class="name" = item[:name]
+
+          div class="attributes"
+            - item[:dimensions].each do |attr|
+              span class="attribute"
+                = "#{attr[0].mb_chars.capitalize.to_s}: #{attr[1]}"
+
+          div class="image-box row"
+            div class="col m4 offset-m2"
+              = image_tag item[:image]
+
+          div class="bottom row"
+            div class="col s1 m2 push-s7"
+              button class="remove remove-from-cart" data-product-id="#{item[:id]}"
+                = fa_icon 'times'
+            div class="col s7 m6 pull-s1"
+              div class="price"
+                span class="new"
+                  sup = render_currency
+                  = item[:discount_price].nil? ? item[:price] : item[:discount_price]
+                - unless item[:discount_price].nil?
+                  span class="old"
+                    sup = item[:price]
+
+  .bottom class=('with-promo' if !@cart.nil? && @cart[:items].length > 0 && @cart[:coupon].present?)
+    - if !@cart.nil? && @cart[:items].length > 0 && @cart[:coupon].present?
+      div class="total row"
+        div class="col s3"
+          div class="title" = I18n.t('front_end.checkout.table.applied_promo')
+        div class="col s5"
+          div class="total"
+            span class="promo"
+              = @cart[:coupon]
+
+    div class="total row"
+      div class="col s4"
+        div class="title" = I18n.t('front_end.cart.total')
+      div class="col s4"
+        div id="cart-total" class="total"
+          span class="new"
+            sup = render_currency
+            = @cart.nil? ? 0 : @cart[:total]
+    = link_to I18n.t('front_end.cart.checkout'), checkout_path, class: %w(button checkout)

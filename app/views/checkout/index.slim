@@ -1,0 +1,57 @@
+div class="checkout-container"
+  div class="row"
+    div class="col s8 l4 offset-l1 left-part"
+      h1 class="page-header" = I18n.t('front_end.checkout.title')
+
+      form id="checkout-form" action="#{checkout_process_path}" method="post"
+        input type="hidden" name="#{:authenticity_token}" value="#{form_authenticity_token}"
+        input#form_coupon_input type="hidden" name="coupon" value="#{@cart[:coupon]}"
+        div class="section common-info"
+          h2 class="section-header" = I18n.t('front_end.checkout.customer_info_section.title')
+          div class="row"
+            div class="col s4 column"
+              label for="first_name"
+                span class="required-mark" *
+                = I18n.t('front_end.checkout.customer_info_section.first_name.label')
+              div class="input-holder"
+                input id="first_name" type="text" name="first_name" data-validation="required" data-validation-error-msg=" "
+            div class="col s4 column"
+              label for="email"
+                span class="required-mark" *
+                = I18n.t('front_end.checkout.customer_info_section.email.label')
+              div class="input-holder"
+                input id="email" type="email" name="email" data-validation="email" data-validation-error-msg=" "
+
+          div class="row"
+            div class="col s4 column"
+              label for="last_name"
+                span class="required-mark" *
+                = I18n.t('front_end.checkout.customer_info_section.last_name.label')
+              div class="input-holder"
+                input id="last_name" type="text" name="last_name" data-validation="required" data-validation-error-msg=" "
+            div class="col s4 column"
+              label for="phone"
+                span class="required-mark" *
+                = I18n.t('front_end.checkout.customer_info_section.phone.label')
+              div class="input-holder"
+                input id="phone" type="tel" pattern="^[0-9\-\+\s\(\)]*$" name="phone" data-validation="required" data-validation-error-msg=" "
+
+        = render :partial => 'checkout/shipment'
+        = render :partial => 'checkout/payment'
+
+        div class="bottom"
+          div class="bottom-section"
+            /input id="save-info" type="checkbox" name="save-info"
+            /label for="save-info" Сохранить эту информацию для более быстрого оформления заказа в следующий раз
+          div class="delimiter"
+          div class="bottom-section"
+            div class="row"
+              div class="col s4"
+                = link_to I18n.t('front_end.checkout.back_to_shop'), shop_path, class: 'back-to-shop'
+              div class="col s4 right-align"
+                input class="button submit" type="submit" value="#{I18n.t('front_end.checkout.complete_order')}"
+
+    div class="col s8 l3 right-part"
+      = render :partial => 'checkout/cart'
+
+  div id="payment-form"
