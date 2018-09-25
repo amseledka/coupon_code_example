@@ -10,4 +10,7 @@ Implementation of promo code feature
 * Apply promo code and updates price in checkout remotely (without page refresh)
 * Promo code is still in cart after page reload or even when user navigates out from cart (to browse shop more, for example)
 
-Some CSS, JS, controller (payments_controller), views are legacy code
+Most of CSS, JS, views are legacy code, where I followed the code structure.
+
+JS file has comments above the feature related code I've written.
+

@@ -77,7 +77,7 @@ $(window).load(function() {
       return false;
     });
 
-    // Promo code
+    // Coupon code
     $couponForm = $('#coupon-form');
     $couponFormInput = $couponForm.find('input[name="coupon"]');
 
@@ -90,7 +90,7 @@ $(window).load(function() {
 
     $couponFormInput.inputmask({"regex": "^GUD-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}$"});
 
-    // Apply promo code
+    // Apply coupon code
     $couponForm.find('[type="submit"]').click(function() {
       $.ajax({
         type: 'PUT',
@@ -116,7 +116,7 @@ $(window).load(function() {
       return false;
     });
 
-    // Remove Promo code
+    // Remove Coupon code
     $(document).on('click', '.remove-coupon-link', function () {
       $.ajax({
         type: 'PUT',

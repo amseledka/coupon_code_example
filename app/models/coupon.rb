@@ -107,11 +107,13 @@ class Coupon < ActiveRecord::Base
     offer_type == 'amount'
   end
 
+
   def bulk_generate(count)
     self.save if self.new_record?
     count.times do
       coupon = self.dup
       coupon.code = Coupon.generate
+      coupon.redemption_limit = 0
       coupon.save
     end
   end
